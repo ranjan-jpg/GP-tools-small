@@ -200,6 +200,75 @@
       color: var(--muted);
     }
 
+    .tool-card + .tool-card {
+      margin-top: 24px;
+    }
+
+    /* Quotation tool: currency tabs */
+
+    .quote-tabs {
+      display: inline-flex;
+      gap: 4px;
+
+      padding: 4px;
+      margin-bottom: 24px;
+
+      background: #eef4f2;
+      border-radius: 13px;
+    }
+
+    .quote-tab {
+      height: 38px;
+      padding: 0 20px;
+
+      border-radius: 9px;
+      border: none;
+
+      background: transparent;
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 600;
+
+      box-shadow: none;
+    }
+
+    .quote-tab:hover {
+      transform: none;
+      color: #52635f;
+    }
+
+    .quote-tab.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 4px 12px rgba(31, 55, 50, 0.10);
+    }
+
+    .quote-panel {
+      display: none;
+    }
+
+    .quote-panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 16px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .field-hint {
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
     /* Input */
 
     .input-label {
@@ -245,6 +314,43 @@
 
     input::placeholder {
       color: #a7b2b0;
+    }
+
+    select {
+      width: 100%;
+      height: 58px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background:
+        #fbfdfc
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23718096'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.1 1.02l-4.25 4.53a.75.75 0 01-1.1 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E")
+        no-repeat right 16px center;
+      background-size: 16px;
+
+      padding: 0 40px 0 18px;
+
+      font-size: 15px;
+      color: var(--text);
+
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+    }
+
+    select:focus {
+      background-color: white;
+      border-color: #9bc9bf;
+
+      box-shadow:
+        0 0 0 4px rgba(47, 125, 114, 0.08);
     }
 
     .base-url {
@@ -401,6 +507,55 @@
       border: 1px solid #d7e5e1;
     }
 
+    /* Breakdown (quotation results) */
+
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      margin-bottom: 14px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+
+      font-size: 13px;
+      color: #5c706b;
+    }
+
+    .breakdown-row span:last-child {
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      padding-top: 14px;
+      margin-top: 4px;
+
+      border-top: 1px dashed #cfe0da;
+
+      font-size: 13px;
+      font-weight: 600;
+      color: #52635f;
+    }
+
+    .total-row strong {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
     /* Future tools */
 
     .future-section {
@@ -421,7 +576,7 @@
 
     .future-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 13px;
     }
 
@@ -544,6 +699,18 @@
 
       .result-actions {
         flex-direction: column;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quote-tabs {
+        width: 100%;
+      }
+
+      .quote-tab {
+        flex: 1;
       }
     }
   </style>
@@ -679,6 +846,216 @@
     </main>
 
 
+    <!-- QUOTATION TOOL -->
+    <main class="tool-card">
+
+      <div class="tool-header">
+
+        <div class="tool-icon">
+          🧾
+        </div>
+
+        <div>
+          <h3>Quotation Tool</h3>
+          <p>Work out domestic and international jewellery quotations.</p>
+        </div>
+
+      </div>
+
+
+      <div class="quote-tabs">
+        <button
+          class="quote-tab active"
+          id="tab-domestic"
+          onclick="switchQuoteTab('domestic')"
+        >
+          Domestic
+        </button>
+
+        <button
+          class="quote-tab"
+          id="tab-international"
+          onclick="switchQuoteTab('international')"
+        >
+          International
+        </button>
+      </div>
+
+
+      <!-- DOMESTIC PANEL -->
+      <div class="quote-panel active" id="panel-domestic">
+
+        <div class="form-grid">
+
+          <div>
+            <label class="input-label" for="domGoldRate24k">24K gold rate (per gram)</label>
+            <input id="domGoldRate24k" type="number" inputmode="decimal" placeholder="e.g. 7250" />
+          </div>
+
+          <div>
+            <label class="input-label" for="domKarat">Karat</label>
+            <select id="domKarat">
+              <option value="0.93">22K</option>
+              <option value="0.77">18K</option>
+              <option value="0.605">14K</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="input-label" for="domColor">Color</label>
+            <select id="domColor">
+              <option value="Yellow">Yellow Gold</option>
+              <option value="White">White Gold</option>
+              <option value="Red">Red Gold</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="input-label" for="domMetalWeight">Metal weight (grams)</label>
+            <input id="domMetalWeight" type="number" inputmode="decimal" placeholder="e.g. 5.2" />
+          </div>
+
+          <div>
+            <label class="input-label" for="domMakingCharges">Making charges (per gram)</label>
+            <input id="domMakingCharges" type="number" inputmode="decimal" placeholder="e.g. 450" />
+          </div>
+
+          <div>
+            <label class="input-label" for="domCadCharges">CAD charges</label>
+            <input id="domCadCharges" type="number" inputmode="decimal" placeholder="e.g. 500" />
+          </div>
+
+          <div class="full">
+            <label class="input-label" for="domGemstonePrice">Gemstone price</label>
+            <input id="domGemstonePrice" type="number" inputmode="decimal" placeholder="e.g. 12000" />
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button class="generate-btn" onclick="calcDomestic()">
+            Calculate Quotation
+          </button>
+
+          <button class="clear-btn" onclick="clearDomestic()">
+            Clear
+          </button>
+
+        </div>
+
+        <div class="result" id="domResult">
+
+          <div class="result-label">
+            <span>Domestic Quotation</span>
+            <span>✓ Ready</span>
+          </div>
+
+          <div class="breakdown-list" id="domBreakdown"></div>
+
+          <div class="total-row">
+            <span>Total incl. GST (3%)</span>
+            <strong id="domFinalTotal"></strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- INTERNATIONAL PANEL -->
+      <div class="quote-panel" id="panel-international">
+
+        <div class="form-grid">
+
+          <div class="full">
+            <label class="input-label" for="intConversionRate">Conversion rate</label>
+            <input id="intConversionRate" type="number" inputmode="decimal" placeholder="e.g. 0.012" />
+          </div>
+
+          <div>
+            <label class="input-label" for="intGoldRate24k">24K gold rate (per gram)</label>
+            <input id="intGoldRate24k" type="number" inputmode="decimal" placeholder="e.g. 7250" />
+          </div>
+
+          <div>
+            <label class="input-label" for="intKarat">Karat</label>
+            <select id="intKarat">
+              <option value="0.93">22K</option>
+              <option value="0.77">18K</option>
+              <option value="0.605">14K</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="input-label" for="intColor">Color</label>
+            <select id="intColor">
+              <option value="Yellow">Yellow Gold</option>
+              <option value="White">White Gold</option>
+              <option value="Red">Red Gold</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="input-label" for="intMetalWeight">Metal weight (grams)</label>
+            <input id="intMetalWeight" type="number" inputmode="decimal" placeholder="e.g. 5.2" />
+          </div>
+
+          <div>
+            <label class="input-label" for="intMakingCharges">Making charges (per gram)</label>
+            <input id="intMakingCharges" type="number" inputmode="decimal" placeholder="e.g. 450" />
+          </div>
+
+          <div>
+            <label class="input-label" for="intCadCharges">CAD charges</label>
+            <input id="intCadCharges" type="number" inputmode="decimal" placeholder="e.g. 500" />
+          </div>
+
+          <div class="full">
+            <label class="input-label" for="intGemstonePrice">Gemstone price</label>
+            <input id="intGemstonePrice" type="number" inputmode="decimal" placeholder="e.g. 12000" />
+          </div>
+
+          <div class="full">
+            <label class="input-label" for="intShippingCharges">Shipping charges</label>
+            <input id="intShippingCharges" type="number" inputmode="decimal" placeholder="e.g. 40" />
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button class="generate-btn" onclick="calcInternational()">
+            Calculate Quotation
+          </button>
+
+          <button class="clear-btn" onclick="clearInternational()">
+            Clear
+          </button>
+
+        </div>
+
+        <div class="result" id="intResult">
+
+          <div class="result-label">
+            <span>International Quotation</span>
+            <span>✓ Ready</span>
+          </div>
+
+          <div class="breakdown-list" id="intBreakdown"></div>
+
+          <div class="total-row">
+            <span>Total incl. shipping</span>
+            <strong id="intFinalTotal"></strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
     <!-- FUTURE TOOLS -->
     <section class="future-section">
 
@@ -687,12 +1064,6 @@
       </div>
 
       <div class="future-grid">
-
-        <div class="future-card">
-          <div class="future-icon">🧾</div>
-          <h4>Quotation Tool</h4>
-          <p>Future quotation and pricing utilities.</p>
-        </div>
 
         <div class="future-card">
           <div class="future-icon">💎</div>
@@ -900,6 +1271,249 @@
           toast.classList.remove("show");
 
         }, 2200);
+
+    }
+
+
+    /*
+      ==========================================================
+      QUOTATION TOOL
+      ==========================================================
+    */
+
+    /*
+      Switch between Domestic / International tabs
+    */
+
+    function switchQuoteTab(tab) {
+
+      const isDomestic = tab === "domestic";
+
+      document.getElementById("tab-domestic")
+        .classList.toggle("active", isDomestic);
+
+      document.getElementById("tab-international")
+        .classList.toggle("active", !isDomestic);
+
+      document.getElementById("panel-domestic")
+        .classList.toggle("active", isDomestic);
+
+      document.getElementById("panel-international")
+        .classList.toggle("active", !isDomestic);
+
+    }
+
+
+    /*
+      Formatting helpers
+    */
+
+    function formatINR(value) {
+
+      return (
+        "₹" +
+        value.toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+
+    }
+
+    function formatNumber(value) {
+
+      return value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+    }
+
+
+    /*
+      Read a numeric field, returns NaN if empty/invalid
+    */
+
+    function readNumber(id) {
+
+      const raw = document.getElementById(id).value.trim();
+
+      if (raw === "") {
+        return NaN;
+      }
+
+      return parseFloat(raw);
+
+    }
+
+
+    /*
+      Render a list of [label, value] rows into a breakdown container
+    */
+
+    function renderBreakdown(containerId, rows) {
+
+      const container = document.getElementById(containerId);
+
+      container.innerHTML = rows
+        .map(
+          ([label, value]) =>
+            `<div class="breakdown-row"><span>${label}</span><span>${value}</span></div>`
+        )
+        .join("");
+
+    }
+
+
+    /*
+      Domestic quotation
+    */
+
+    function calcDomestic() {
+
+      const goldRate24k = readNumber("domGoldRate24k");
+      const karatMultiplier = parseFloat(document.getElementById("domKarat").value);
+      const karatLabel = document.getElementById("domKarat").selectedOptions[0].text;
+      const color = document.getElementById("domColor").value;
+      const metalWeight = readNumber("domMetalWeight");
+      const makingCharges = readNumber("domMakingCharges");
+      const cadCharges = readNumber("domCadCharges") || 0;
+      const gemstonePrice = readNumber("domGemstonePrice") || 0;
+
+      if (isNaN(goldRate24k) || isNaN(metalWeight) || isNaN(makingCharges)) {
+
+        showToast("Please fill in gold rate, metal weight and making charges.");
+
+        return;
+      }
+
+      const goldRateOrderDate = goldRate24k * karatMultiplier;
+
+      const goldChargesIncludingMaking =
+        (goldRateOrderDate + makingCharges) * metalWeight + cadCharges;
+
+      const totalWithoutGST = gemstonePrice + goldChargesIncludingMaking;
+
+      const totalWithGST = totalWithoutGST * 1.03;
+
+      renderBreakdown("domBreakdown", [
+        ["Karat / Color", `${karatLabel} · ${color} Gold`],
+        ["Gold rate on order date", formatINR(goldRateOrderDate) + " /g"],
+        ["Gold charges incl. making", formatINR(goldChargesIncludingMaking)],
+        ["Gemstone price", formatINR(gemstonePrice)],
+        ["Total before GST", formatINR(totalWithoutGST)],
+      ]);
+
+      document.getElementById("domFinalTotal").textContent =
+        formatINR(totalWithGST);
+
+      document.getElementById("domResult").classList.add("show");
+
+    }
+
+
+    function clearDomestic() {
+
+      [
+        "domGoldRate24k",
+        "domMetalWeight",
+        "domMakingCharges",
+        "domCadCharges",
+        "domGemstonePrice",
+      ].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+
+      document.getElementById("domKarat").selectedIndex = 0;
+      document.getElementById("domColor").selectedIndex = 0;
+
+      document.getElementById("domResult").classList.remove("show");
+      document.getElementById("domBreakdown").innerHTML = "";
+      document.getElementById("domFinalTotal").textContent = "";
+
+    }
+
+
+    /*
+      International quotation
+    */
+
+    function calcInternational() {
+
+      const conversionRate = readNumber("intConversionRate");
+      const goldRate24k = readNumber("intGoldRate24k");
+      const karatMultiplier = parseFloat(document.getElementById("intKarat").value);
+      const karatLabel = document.getElementById("intKarat").selectedOptions[0].text;
+      const color = document.getElementById("intColor").value;
+      const metalWeight = readNumber("intMetalWeight");
+      const makingCharges = readNumber("intMakingCharges");
+      const cadCharges = readNumber("intCadCharges") || 0;
+      const gemstonePrice = readNumber("intGemstonePrice") || 0;
+      const shippingCharges = readNumber("intShippingCharges") || 0;
+
+      if (
+        isNaN(conversionRate) ||
+        isNaN(goldRate24k) ||
+        isNaN(metalWeight) ||
+        isNaN(makingCharges)
+      ) {
+
+        showToast(
+          "Please fill in conversion rate, gold rate, metal weight and making charges."
+        );
+
+        return;
+      }
+
+      const goldRateOrderDate = goldRate24k * karatMultiplier;
+
+      const goldChargesIncludingMaking =
+        (goldRateOrderDate + makingCharges) * metalWeight + cadCharges;
+
+      const totalCharges = gemstonePrice + goldChargesIncludingMaking;
+
+      const convertedTotal = totalCharges * conversionRate;
+
+      const finalTotal = convertedTotal + shippingCharges;
+
+      renderBreakdown("intBreakdown", [
+        ["Karat / Color", `${karatLabel} · ${color} Gold`],
+        ["Gold rate on order date", formatNumber(goldRateOrderDate) + " /g"],
+        ["Gold charges incl. making", formatNumber(goldChargesIncludingMaking)],
+        ["Gemstone price", formatNumber(gemstonePrice)],
+        ["Total charges", formatNumber(totalCharges)],
+        [`Converted (× ${conversionRate})`, formatNumber(convertedTotal)],
+        ["Shipping charges", formatNumber(shippingCharges)],
+      ]);
+
+      document.getElementById("intFinalTotal").textContent =
+        formatNumber(finalTotal);
+
+      document.getElementById("intResult").classList.add("show");
+
+    }
+
+
+    function clearInternational() {
+
+      [
+        "intConversionRate",
+        "intGoldRate24k",
+        "intMetalWeight",
+        "intMakingCharges",
+        "intCadCharges",
+        "intGemstonePrice",
+        "intShippingCharges",
+      ].forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+
+      document.getElementById("intKarat").selectedIndex = 0;
+      document.getElementById("intColor").selectedIndex = 0;
+
+      document.getElementById("intResult").classList.remove("show");
+      document.getElementById("intBreakdown").innerHTML = "";
+      document.getElementById("intFinalTotal").textContent = "";
 
     }
 
