@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>GemPundit Tools</title>
+
+  <style>
+    :root {
+      --bg: #f4f7f6;
+      --card: rgba(255, 255, 255, 0.88);
+      --text: #1f2933;
+      --muted: #718096;
+      --primary: #2f7d72;
+      --primary-dark: #25665d;
+      --border: #e4ebe8;
+      --success: #2f855a;
+      --shadow: 0 20px 60px rgba(31, 55, 50, 0.08);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(133, 192, 181, 0.20),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 90% 90%,
+          rgba(182, 214, 205, 0.25),
+          transparent 30%
+        ),
+        var(--bg);
+
+      padding: 40px 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    /* Header */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 45px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #dceee9;
+      color: var(--primary);
+
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 8px 13px;
+      border-radius: 50px;
+
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--border);
+
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: #62b58a;
+      border-radius: 50%;
+    }
+
+    /* Hero */
+
+    .hero {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+
+    .hero h2 {
+      font-size: clamp(32px, 5vw, 48px);
+      letter-spacing: -1.8px;
+      line-height: 1.1;
+      margin-bottom: 13px;
+    }
+
+    .hero h2 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 590px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* Main Card */
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+
+      padding: 32px;
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .tool-icon {
+      width: 48px;
+      height: 48px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 15px;
+
+      background: #e3f1ed;
+      color: var(--primary);
+
+      font-size: 20px;
+    }
+
+    .tool-header h3 {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+
+    .tool-header p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Input */
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 9px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 58px;
+
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      background: #fbfdfc;
+
+      padding: 0 18px;
+
+      font-size: 15px;
+      color: var(--text);
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    input:focus {
+      background: white;
+      border-color: #9bc9bf;
+
+      box-shadow:
+        0 0 0 4px rgba(47, 125, 114, 0.08);
+    }
+
+    input::placeholder {
+      color: #a7b2b0;
+    }
+
+    .base-url {
+      margin-top: 10px;
+
+      color: var(--muted);
+      font-size: 12px;
+
+      word-break: break-all;
+    }
+
+    .base-url strong {
+      color: #5c706b;
+      font-weight: 500;
+    }
+
+    /* Buttons */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      height: 48px;
+      border-radius: 13px;
+
+      border: none;
+
+      padding: 0 20px;
+
+      font-size: 13px;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .generate-btn {
+      flex: 1;
+
+      color: white;
+      background: var(--primary);
+
+      box-shadow:
+        0 8px 20px rgba(47, 125, 114, 0.20);
+    }
+
+    .generate-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .clear-btn {
+      background: #edf2f0;
+      color: #52635f;
+    }
+
+    .clear-btn:hover {
+      background: #e4ebe8;
+    }
+
+    /* Result */
+
+    .result {
+      display: none;
+
+      margin-top: 25px;
+      padding: 20px;
+
+      background: #f5faf8;
+
+      border: 1px solid #dcebe6;
+      border-radius: 17px;
+    }
+
+    .result.show {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 9px;
+
+      font-size: 12px;
+      font-weight: 600;
+      color: #59716b;
+    }
+
+    .result-link {
+      background: white;
+
+      border: 1px solid #dce8e4;
+      border-radius: 12px;
+
+      padding: 14px;
+
+      font-size: 13px;
+      line-height: 1.5;
+
+      word-break: break-all;
+
+      color: #315c54;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .copy-btn,
+    .open-btn {
+      flex: 1;
+      height: 43px;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .open-btn {
+      background: white;
+      color: var(--primary);
+      border: 1px solid #d7e5e1;
+    }
+
+    /* Future tools */
+
+    .future-section {
+      margin-top: 35px;
+    }
+
+    .section-title {
+      margin-bottom: 14px;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
+      color: #879793;
+    }
+
+    .future-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+    }
+
+    .future-card {
+      min-height: 105px;
+
+      padding: 19px;
+
+      border: 1px dashed #d8e3df;
+      border-radius: 17px;
+
+      background: rgba(255, 255, 255, 0.45);
+
+      color: #91a09c;
+
+      transition: all 0.2s ease;
+    }
+
+    .future-card:hover {
+      border-color: #b7cec7;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .future-card .future-icon {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .future-card h4 {
+      font-size: 13px;
+      color: #687b76;
+      margin-bottom: 4px;
+    }
+
+    .future-card p {
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* Footer */
+
+    footer {
+      text-align: center;
+      margin-top: 35px;
+
+      color: #99a6a2;
+      font-size: 11px;
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      transform: translateX(-50%) translateY(20px);
+
+      background: #263c37;
+      color: white;
+
+      padding: 11px 17px;
+
+      border-radius: 50px;
+
+      font-size: 12px;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: all 0.25s ease;
+
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Mobile */
+
+    @media (max-width: 700px) {
+      body {
+        padding: 25px 15px;
+      }
+
+      header {
+        margin-bottom: 35px;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .hero {
+        text-align: left;
+      }
+
+      .hero p {
+        margin: 0;
+      }
+
+      .tool-card {
+        padding: 22px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .clear-btn {
+        width: 100%;
+      }
+
+      .future-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+
+        <div>
+          <h1>GemPundit Tools</h1>
+          <p>Simple utilities for everyday work</p>
+        </div>
+      </div>
+
+      <div class="status">
+        <span class="status-dot"></span>
+        Ready
+      </div>
+    </header>
+
+
+    <!-- HERO -->
+    <section class="hero">
+      <h2>
+        Work smarter.<br />
+        <span>Keep it simple.</span>
+      </h2>
+
+      <p>
+        A calm workspace for quick GemPundit utilities.
+        More tools can be added here whenever you need them.
+      </p>
+    </section>
+
+
+    <!-- PAYMENT LINK TOOL -->
+    <main class="tool-card">
+
+      <div class="tool-header">
+
+        <div class="tool-icon">
+          🔗
+        </div>
+
+        <div>
+          <h3>Direct Payment Link</h3>
+          <p>Convert a payment token into a complete payment URL.</p>
+        </div>
+
+      </div>
+
+
+      <label class="input-label" for="token">
+        Enter payment token
+      </label>
+
+      <div class="input-wrapper">
+        <input
+          id="token"
+          type="text"
+          autocomplete="off"
+          placeholder="e.g. 11e1c0b32937effb2355f4d777b1a128-150373"
+          onkeydown="handleEnter(event)"
+        />
+      </div>
+
+      <div class="base-url">
+        Base URL:
+        <strong>
+          https://www.gempundit.com/direct-payment?tkn=
+        </strong>
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="generate-btn"
+          onclick="generateLink()"
+        >
+          Generate Payment Link
+        </button>
+
+        <button
+          class="clear-btn"
+          onclick="clearTool()"
+        >
+          Clear
+        </button>
+
+      </div>
+
+
+      <!-- RESULT -->
+      <div class="result" id="result">
+
+        <div class="result-label">
+          <span>Generated Payment Link</span>
+          <span>✓ Ready</span>
+        </div>
+
+        <div
+          class="result-link"
+          id="resultLink"
+        ></div>
+
+        <div class="result-actions">
+
+          <button
+            class="copy-btn"
+            onclick="copyLink()"
+          >
+            Copy Link
+          </button>
+
+          <button
+            class="open-btn"
+            onclick="openLink()"
+          >
+            Open Link ↗
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
+    <!-- FUTURE TOOLS -->
+    <section class="future-section">
+
+      <div class="section-title">
+        More tools
+      </div>
+
+      <div class="future-grid">
+
+        <div class="future-card">
+          <div class="future-icon">🧾</div>
+          <h4>Quotation Tool</h4>
+          <p>Future quotation and pricing utilities.</p>
+        </div>
+
+        <div class="future-card">
+          <div class="future-icon">💎</div>
+          <h4>Gemstone Tools</h4>
+          <p>Quick gemstone-related calculations and helpers.</p>
+        </div>
+
+        <div class="future-card">
+          <div class="future-icon">📦</div>
+          <h4>Order Utilities</h4>
+          <p>Useful shortcuts for everyday order handling.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <footer>
+      GemPundit Tools · Built for a smoother workflow
+    </footer>
+
+  </div>
+
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    Link copied successfully
+  </div>
+
+
+  <script>
+
+    /*
+      ==========================================================
+      GEM PUNDIT DIRECT PAYMENT LINK TOOL
+      ==========================================================
+    */
+
+    const BASE_URL =
+      "https://www.gempundit.com/direct-payment?tkn=";
+
+    let generatedLink = "";
+
+
+    /*
+      Generate payment link
+    */
+
+    function generateLink() {
+
+      const tokenInput =
+        document.getElementById("token");
+
+      const token =
+        tokenInput.value.trim();
+
+      if (!token) {
+
+        showToast("Please enter a payment token.");
+
+        tokenInput.focus();
+
+        return;
+      }
+
+
+      generatedLink =
+        BASE_URL + encodeURIComponent(token);
+
+
+      document.getElementById("resultLink")
+        .textContent = generatedLink;
+
+
+      document.getElementById("result")
+        .classList.add("show");
+
+    }
+
+
+    /*
+      Copy generated link
+    */
+
+    async function copyLink() {
+
+      if (!generatedLink) {
+        return;
+      }
+
+      try {
+
+        await navigator.clipboard.writeText(
+          generatedLink
+        );
+
+        showToast("Link copied successfully.");
+
+      } catch (error) {
+
+        /*
+          Fallback for browsers that don't
+          support navigator.clipboard.
+        */
+
+        const temp =
+          document.createElement("textarea");
+
+        temp.value = generatedLink;
+
+        document.body.appendChild(temp);
+
+        temp.select();
+
+        document.execCommand("copy");
+
+        temp.remove();
+
+        showToast("Link copied successfully.");
+
+      }
+
+    }
+
+
+    /*
+      Open generated link
+    */
+
+    function openLink() {
+
+      if (!generatedLink) {
+        return;
+      }
+
+      window.open(
+        generatedLink,
+        "_blank"
+      );
+
+    }
+
+
+    /*
+      Clear tool
+    */
+
+    function clearTool() {
+
+      document.getElementById("token")
+        .value = "";
+
+      document.getElementById("result")
+        .classList.remove("show");
+
+      document.getElementById("resultLink")
+        .textContent = "";
+
+      generatedLink = "";
+
+      document.getElementById("token")
+        .focus();
+
+    }
+
+
+    /*
+      Enter key support
+    */
+
+    function handleEnter(event) {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        generateLink();
+
+      }
+
+    }
+
+
+    /*
+      Toast notification
+    */
+
+    let toastTimer;
+
+    function showToast(message) {
+
+      const toast =
+        document.getElementById("toast");
+
+      toast.textContent = message;
+
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+
+      toastTimer =
+        setTimeout(() => {
+
+          toast.classList.remove("show");
+
+        }, 2200);
+
+    }
+
+  </script>
+
+</body>
+</html>
